@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Photo Shop - Professional Biometric & A4 Print Studio</title>
+  
+  <!-- Inter and JetBrains Mono Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons Library -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* === ROOT DESIGN VARIABLES === */
+    :root {
+      --bg-dark: #121214;
+      --bg-card: #181c24;
+      --bg-active: rgba(34, 211, 238, 0.08);
+      --border-soft: rgba(255, 255, 255, 0.06);
+      --border-medium: rgba(255, 255, 255, 0.12);
+      --color-primary: #06b6d4;
+      --color-primary-hover: #22d3ee;
+      --color-success: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius-lg: 12px;
+      --radius-md: 8px;
+    }
+
+    /* === RESET & FOUNDATIONS === */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* === APP HEADER === */
+    .app-header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      gap: 1.5rem;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo-icon {
+      background: linear-gradient(135deg, #0891b2, #06b6d4);
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+    }
+
+    .brand-info h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+
+    .brand-info p {
+      font-size: 0.72rem;
+      color: var(--color-primary-hover);
+    }
+
+    /* === MAIN LAYOUT: THREE-PANEL GRID === */
+    .studio-three-panel-grid {
+      display: grid;
+      grid-template-columns: 310px 1fr 345px;
+      height: calc(100vh - 61px);
+      max-height: calc(100vh - 61px);
+      width: 100%;
+      overflow: hidden;
+    }
+
+    /* SIDEBARS common styles */
+    .studio-sidebar {
+      background-color: var(--bg-card);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      padding: 1.25rem;
+      box-sizing: border-box;
+    }
+
+    .studio-left-sidebar {
+      border-right: 1px solid var(--border-soft);
+    }
+
+    .studio-right-sidebar {
+      border-left: 1px solid var(--border-soft);
+    }
+
+    /* CENTER WORKSPACE WORKSPACE */
+    .studio-center-workspace {
+      background-color: #0c0d0f;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      gap: 1.5rem;
+      box-sizing: border-box;
+    }
+
+    /* === PANEL CONTROLS CARD === */
+    .sidebar-widget {
+      background: rgba(30,30,35,0.45);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .widget-title {
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* === ACTIVE PHOTO SWITCHING TABS (ABOVE CANVAS!) === */
+    .canvas-tab-bar {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      max-width: 580px;
+      margin-bottom: -0.5rem;
+      justify-content: flex-start;
+      z-index: 10;
+    }
+
+    .photo-tab-btn {
+      flex: 1;
+      background: #1e293b;
+      border: 1px solid var(--border-soft);
+      color: var(--text-muted);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .photo-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .photo-tab-btn.active {
+      background: var(--bg-active);
+      border-color: var(--color-primary);
+      color: var(--color-primary-hover);
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+    }
+
+    /* === INTERACTIVE CANVAS VIEWER CARD === */
+    .canvas-workspace-backdrop-card {
+      width: 100%;
+      max-width: 580px;
+      padding: 1rem;
+      background: radial-gradient(circle at center, #111827 0%, #030712 100%);
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--border-medium);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .interactive-viewport-outer {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem 0;
+    }
+
+    .crop-viewport-scaler-wrapper {
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      width: 320px;
+      height: 400px;
+      position: relative;
+    }
+
+    .crop-master-viewport-box {
+      width: 100%;
+      height: 100%;
+      background-color: #334155;
+      position: relative;
+      touch-action: none;
+      cursor: move;
+    }
+
+    /* Cutout and background overlay layers in canvas */
+    #cutout-rendered-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+
+    /* Biometric Guides Overlay */
+    .biometric-guides-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 20;
+      border: 2px solid var(--color-primary);
+    }
+
+    .biometric-face-silhouette {
+      position: absolute;
+      top: 15%;
+      left: 15%;
+      width: 70%;
+      height: 70%;
+      opacity: 0.45;
+      color: var(--color-primary-hover);
+    }
+
+    /* White overlay crop crop box guidelines overlay */
+    .crop-grid-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border: 1px dashed rgba(255, 255, 255, 0.4);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      pointer-events: none;
+    }
+
+    .crop-grid-overlay div {
+      border: 0.5px dashed rgba(255, 255, 255, 0.2);
+    }
+
+    /* Quick Feedback indicators bar below crop */
+    .center-feedback-bar {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+
+    .feedback-preview-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .feedback-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .feedback-frame-box {
+      width: 100%;
+      height: 70px;
+      background: #020617;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .feedback-cropped-preview {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    /* === SLIDERS AND SETTINGS === */
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .slider-labels span:last-child {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--color-primary-hover);
+    }
+
+    .slider-input {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 99px;
+      background: #1e293b;
+      outline: none;
+    }
+
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      cursor: pointer;
+      box-shadow: 0 0 8px var(--color-primary);
+      transition: all 0.15s ease;
+    }
+
+    .slider-input::-webkit-slider-thumb:hover {
+      background: var(--color-primary-hover);
+      transform: scale(1.15);
+    }
+
+    /* === BACKGROUND SWATCH BUTTONS === */
+    .swatch-group {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .swatch-btn {
+      padding: 10px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.1s ease;
+      background: #1e293b;
+      color: var(--text-muted);
+    }
+
+    .swatch-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    .swatch-btn.active {
+      background: var(--bg-active);
+      border-color: var(--color-primary);
+      color: var(--color-primary-hover);
+    }
+
+    /* === COMPOSITE A4 PRINT MATRIX CARD === */
+    .preview-sheet-box {
+      width: 100%;
+      max-width: 580px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .preview-sheet-box-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .preview-sheet-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .printer-logo-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.05em;
+    }
+
+    /* Grid representation of duplicate passport prints inside A4 frame */
+    .a4-print-grid-canvas {
+      width: 100%;
+      aspect-ratio: 1 / 1.414; /* A4 aspect ratio representation */
+      background: #ffffff;
+      border-radius: 4px;
+      border: 1px solid #cbd5e1;
+      padding: 15px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 8px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .a4-photo-slot {
+      border: 1px solid #e2e8f0;
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      transition: all 0.1s ease;
+    }
+
+    .a4-photo-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* === PRIMARY BUTTONS === */
+    .btn-action-primary {
+      width: 100%;
+      background: linear-gradient(135deg, #0284c7, #06b6d4);
+      color: #ffffff;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(6, 182, 212, 0.35);
+    }
+
+    .btn-action-primary:active {
+      transform: translateY(0);
+    }
+
+    /* === ALL-DEVICE RESPONSIVE BREAKPOINTS === */
+    @media (max-width: 1024px) {
+      body {
+        overflow-y: auto;
+      }
+
+      .studio-three-panel-grid {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        max-height: none;
+        overflow: visible;
+        padding: 1rem;
+        gap: 1.5rem;
+      }
+
+      /* Middle Section (Cropping Areas & Previews) forced first of stack */
+      .studio-center-workspace {
+        order: 1;
+        width: 100%;
+        padding: 0;
+        overflow: visible;
+        height: auto;
+      }
+
+      /* Left features side bar stacked dynamically lower */
+      .studio-left-sidebar {
+        order: 2;
+        width: 100%;
+        border-right: none;
+        border-top: 1px solid var(--border-soft);
+        padding: 0;
+        height: auto;
+        overflow: visible;
+      }
+
+      /* Right param sliders stacked lowest of all */
+      .studio-right-sidebar {
+        order: 3;
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border-soft);
+        padding: 0;
+        height: auto;
+        overflow: visible;
+      }
+
+      .header-inner {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        text-align: center;
+      }
+
+      .canvas-tab-bar {
+        max-width: 100%;
+      }
+
+      .canvas-workspace-backdrop-card {
+        max-width: 100%;
+      }
+
+      .preview-sheet-box {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- APPLICATION HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="brand-logo-icon">
+          <i data-lucide="printer" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div class="brand-info">
+          <h1>Smart Photo Shop</h1>
+          <p>All-in-One Photo Editing & Print Studio - Live Edition</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- WORKSPACE GRID -->
+  <div class="studio-three-panel-grid">
+    
+    <!-- LEFT SIDEBAR SIDE PANEL -->
+    <aside class="studio-sidebar studio-left-sidebar">
+      
+      <div class="sidebar-widget">
+        <div class="widget-title">
+          <i data-lucide="sliders" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
+          Preset Options
+        </div>
+        <div class="slider-row" style="margin-top: 0;">
+          <button class="photo-tab-btn active" id="btn-biometric-outline-toggle" style="width: 100%; justify-content: center; font-size: 0.75rem;">
+            <i data-lucide="eye" style="width: 14px; height: 14px;"></i> Toggle Biometric Guide
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-widget">
+        <div class="widget-title">
+          <i data-lucide="wand-2" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
+          Automatic BG Separation
+        </div>
+        <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 8px;">
+          Automatic AI Chroma threshold mapping is applied client-side to separate subject borders flawlessly. Toggle preset solid backgrounds:
+        </p>
+        <div class="swatch-group">
+          <button class="swatch-btn active" id="bg-btn-white" onclick="changeBackground('#ffffff')">
+            <span style="display:inline-block; width:12px; height:12px; background:#fff; border-radius:50%; border:1px solid #778;"></span>
+            White
+          </button>
+          <button class="swatch-btn" id="bg-btn-blue" onclick="changeBackground('#1d4ed8')">
+            <span style="display:inline-block; width:12px; height:12px; background:#1d4ed8; border-radius:50%;"></span>
+            Blue
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-widget">
+        <div class="widget-title">
+          <i data-lucide="file-text" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
+          Biometric Instructions
+        </div>
+        <ul style="font-size: 0.72rem; color: var(--text-muted); padding-left: 1rem; display: flex; flex-direction: column; gap: 4px;">
+          <li>Face must cover 70-80% of image height.</li>
+          <li>Ensure background is perfectly clean, white or blue.</li>
+          <li>Crop frame guides must touch chin and top of head hair bounds.</li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <!-- CENTER DOCK WORKSPACE -->
+    <main class="studio-center-workspace">
+      
+      <!-- PHOTO SELECTION TABS -->
+      <div class="canvas-tab-bar">
+        <button class="photo-tab-btn active" id="tab-photo-1" onclick="switchActivePhoto(1)">
+          <i data-lucide="user" style="width: 14px; height: 14px;"></i> Ali Hasan Pic (Photo 1)
+        </button>
+        <button class="photo-tab-btn" id="tab-photo-2" onclick="switchActivePhoto(2)">
+          <i data-lucide="user" style="width: 14px; height: 14px;"></i> Dukhan Pic (Photo 2)
+        </button>
+      </div>
+
+      <!-- WORKSPACE VIEWER CARD -->
+      <div class="canvas-workspace-backdrop-card">
+        
+        <div class="interactive-viewport-outer">
+          <div class="crop-viewport-scaler-wrapper">
+            <div class="crop-master-viewport-box" id="editor-viewport" onpointerdown="onPointerDown(event)" onpointermove="onPointerMove(event)" onpointerup="onPointerUp(event)">
+              
+              <!-- Subject Canvas for real-time local chroma separation background fills -->
+              <canvas id="cutout-rendered-canvas" width="320" height="400"></canvas>
+
+              <!-- Semitransparent Biometric outlines Overlay guides -->
+              <div class="biometric-guides-overlay" id="outline-guide-vector">
+                <svg class="biometric-face-silhouette" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <ellipse cx="50" cy="45" rx="26" ry="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3"/>
+                  <line x1="15" y1="42" x2="85" y2="42" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 2"/>
+                  <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 2"/>
+                </svg>
+                <div class="crop-grid-overlay">
+                  <div></div><div></div><div></div>
+                  <div></div><div></div><div></div>
+                  <div></div><div></div><div></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback cards block below center grid -->
+        <div class="center-feedback-bar">
+          <div class="feedback-preview-item">
+            <span class="feedback-title"><i data-lucide="crop" style="width:10px; height:10px; vertical-align:middle;"></i> Crop Check</span>
+            <div class="feedback-frame-box" id="feedback-crop-frame">
+              <!-- Live small thumbnail rendering dynamically -->
+              <canvas id="feedback-canvas" width="100" height="120" style="width: auto; height: 100%; max-height:100%; max-width:100%; object-fit: contain;"></canvas>
+            </div>
+          </div>
+          <div class="feedback-preview-item">
+            <span class="feedback-title"><i data-lucide="palette" style="width:10px; height:10px; vertical-align:middle;"></i> Active Color</span>
+            <div class="feedback-frame-box" id="feedback-color" style="background:#fff; color:#0f172a; font-size:0.75rem; font-weight:700;">
+              White (#FFFFFF)
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COMPOSITE PRINT MATRIX GRID LAYOUT -->
+      <section class="preview-sheet-box">
+        <div class="preview-sheet-box-hdr">
+          <span class="preview-sheet-title">
+            <i data-lucide="file-check" style="width: 16px; height: 16px; color: var(--color-primary);"></i>
+            Passport Photo Print Preview
+          </span>
+          <span class="printer-logo-label">
+            <i data-lucide="printer" style="width: 12px; height: 12px;"></i>
+            A4 Print Ready
+          </span>
+        </div>
+
+        <div class="a4-print-grid-canvas" id="print-sheet-grid">
+          <!-- Injected dynamically by generator JS -->
+        </div>
+
+        <button class="btn-action-primary" onclick="initiateBrowserPrint()">
+          <i data-lucide="printer" style="width: 16px; height: 16px;"></i>
+          Generate A4 Photo Sheet & Print
+        </button>
+      </section>
+
+    </main>
+
+    <!-- RIGHT SIDEBAR SLIDERS PANEL -->
+    <aside class="studio-sidebar studio-right-sidebar">
+      
+      <div class="sidebar-widget">
+        <div class="widget-title">
+          <i data-lucide="sliders-horizontal" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
+          Photo Fine-Tuning
+        </div>
+
+        <!-- Slider Row: Face Brightness -->
+        <div class="slider-row">
+          <div class="slider-labels">
+            <span>Face Brightness</span>
+            <span id="brightness-val">100%</span>
+          </div>
+          <input type="range" min="50" max="200" value="100" class="slider-input" id="slide-brightness" oninput="adjustBrightness(this.value)">
+        </div>
+
+        <!-- Slider Row: Position Scale (Zoom) -->
+        <div class="slider-row" style="margin-top: 15px;">
+          <div class="slider-labels">
+            <span>Scale Zoom</span>
+            <span id="scale-val">1.0x</span>
+          </div>
+          <input type="range" min="0.5" max="2.0" step="0.05" value="1.0" class="slider-input" id="slide-scale" oninput="adjustScale(this.value)">
+        </div>
+
+        <!-- Slider Row: Offset X Position -->
+        <div class="slider-row" style="margin-top: 15px;">
+          <div class="slider-labels">
+            <span>Offset X</span>
+            <span id="pos-x-val">0px</span>
+          </div>
+          <input type="range" min="-150" max="150" value="0" class="slider-input" id="slide-pos-x" oninput="adjustPosX(this.value)">
+        </div>
+
+        <!-- Slider Row: Offset Y Position -->
+        <div class="slider-row" style="margin-top: 15px;">
+          <div class="slider-labels">
+            <span>Offset Y</span>
+            <span id="pos-y-val">0px</span>
+          </div>
+          <input type="range" min="-150" max="150" value="0" class="slider-input" id="slide-pos-y" oninput="adjustPosY(this.value)">
+        </div>
+
+        <!-- Reset Button -->
+        <button class="photo-tab-btn" onclick="resetAdjustments()" style="margin-top: 1.25rem; font-size: 0.75rem; width: 100%;">
+          <i data-lucide="rotate-ccw" style="width:14px; height:14px;"></i> Reset Fine-Tuning
+        </button>
+
+      </div>
+
+      <div class="sidebar-widget">
+        <div class="widget-title">
+          <i data-lucide="image" style="width: 14px; height: 14px; color: var(--color-primary);"></i>
+          Layout Direction
+        </div>
+        <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px;">
+          Select printing density layout arrangement to fit onto A4 paper limits seamlessly:
+        </p>
+        <div class="swatch-group">
+          <button class="swatch-btn active" id="layout-density-std" onclick="changePrintCopies(20)">Std Grid (20 copies)</button>
+          <button class="swatch-btn" id="layout-density-max" onclick="changePrintCopies(12)">Economy (12 copies)</button>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- JAVASCRIPT CODE ENGINE -->
+  <script>
+    // === DYNAMIC MOCK ASSETS (Base64 SVG Portraits to avoid network fetch fails) ===
+    // Beautiful Passport Portrait 1 (Male silhouette with beard concept)
+    const aliHasanBaseFace = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><rect width="300" height="400" fill="%23d1d5db"/><circle cx="150" cy="180" r="70" fill="%23fbcfe8"/><ellipse cx="150" cy="310" rx="95" ry="70" fill="%231e293b"/><path d="M 120 180 Q 150 160 180 180" stroke="%233b82f6" stroke-width="4" fill="none"/><circle cx="125" cy="170" r="7" fill="%23000"/><circle cx="175" cy="170" r="7" fill="%23000"/><path d="M 140 210 Q 150 225 160 210" stroke="%23dc2626" stroke-width="3" fill="none"/></svg>`;
+    
+    // Beautiful Passport Portrait 2 (Female silhouette concept)
+    const dukhanBaseFace = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><rect width="300" height="400" fill="%23d1d5db"/><circle cx="150" cy="180" r="68" fill="%23fed7aa"/><ellipse cx="150" cy="315" rx="90" ry="65" fill="%234338ca"/><path d="M 115 178 Q 150 155 185 178" stroke="%23db2777" stroke-width="4" fill="none"/><circle cx="120" cy="172" r="7" fill="%23000"/><circle cx="180" cy="172" r="7" fill="%23000"/><path d="M 135 212 Q 150 230 165 212" stroke="%23059669" stroke-width="3" fill="none"/></svg>`;
+
+    // === APPLICATION STATE CONFIG ===
+    const STATE = {
+      activeId: 1,
+      background: '#ffffff',
+      numCopies: 20,
+      photos: {
+        1: {
+          id: 1,
+          name: "Ali Hasan Pic",
+          baseImageSrc: aliHasanBaseFace,
+          brightness: 100,
+          scale: 1.0,
+          posX: 0,
+          posY: 0,
+        },
+        2: {
+          id: 2,
+          name: "Dukhan Pic",
+          baseImageSrc: dukhanBaseFace,
+          brightness: 100,
+          scale: 1.0,
+          posX: 0,
+          posY: 0,
+        }
+      }
+    };
+
+    // User Pointer Dragging Variables
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    // === INITIALIZATION ===
+    window.addEventListener('DOMContentLoaded', () => {
+      // Re-init lucide icons
+      lucide.createIcons();
+
+      // Bind Biometric Outline toggle click handler
+      const toggleBtn = document.getElementById('btn-biometric-outline-toggle');
+      const innerGuideVec = document.getElementById('outline-guide-vector');
+      toggleBtn.addEventListener('click', () => {
+        const isHidden = innerGuideVec.style.display === 'none';
+        innerGuideVec.style.display = isHidden ? 'block' : 'none';
+        toggleBtn.classList.toggle('active', isHidden);
+      });
+
+      // Load initial photo selection
+      loadActivePhoto();
+    });
+
+    // === LOAD ACTIVE PHOTO ===
+    function loadActivePhoto() {
+      const activePhoto = STATE.photos[STATE.activeId];
+      
+      // Update Sliders to active profile values
+      document.getElementById('slide-brightness').value = activePhoto.brightness;
+      document.getElementById('brightness-val').textContent = activePhoto.brightness + '%';
+
+      document.getElementById('slide-scale').value = activePhoto.scale;
+      document.getElementById('scale-val').textContent = activePhoto.scale.toFixed(2) + 'x';
+
+      document.getElementById('slide-pos-x').value = activePhoto.posX;
+      document.getElementById('pos-x-val').textContent = activePhoto.posX + 'px';
+
+      document.getElementById('slide-pos-y').value = activePhoto.posY;
+      document.getElementById('pos-y-val').textContent = activePhoto.posY + 'px';
+
+      // Redraw Canvas Viewport
+      updateCanvasRender();
+
+      // Refresh sub composites
+      updatePrintSheetGrid();
+    }
+
+    // === CANVAS RENDERER CLIENT CHROMA KEY CORE ENGINE ===
+    function updateCanvasRender() {
+      const cutoutCanvas = document.getElementById('cutout-rendered-canvas');
+      const ctx = cutoutCanvas.getContext('2d');
+      const activeObj = STATE.photos[STATE.activeId];
+
+      const img = new Image();
+      img.onload = function() {
+        // Clear canvas
+        ctx.clearRect(0,0,320,400);
+
+        // 1. Draw solid choice background (White/Blue Chroma Key Substitute overlay)
+        ctx.fillStyle = STATE.background;
+        ctx.fillRect(0,0,320,400);
+
+        // 2. Compute transforms and load source image (representing client face)
+        ctx.save();
+        
+        // Translate to middle and apply offsets
+        ctx.translate(160 + activeObj.posX, 200 + activeObj.posY);
+        ctx.scale(activeObj.scale, activeObj.scale);
+        
+        // Apply brightness filter dynamically via HTML5 Context attributes
+        ctx.filter = `brightness(${activeObj.brightness}%)`;
+
+        // Draw image centered in the scale transformations plane
+        ctx.drawImage(img, -150, -200, 300, 400);
+        ctx.restore();
+
+        // 3. Populate feedback real-time checks
+        updateCropFeedback();
+      };
+      
+      img.src = activeObj.baseImageSrc;
+    }
+
+    // === REFRESH LIVE SUB-CROP THUMBNAIL ===
+    function updateCropFeedback() {
+      const renderCanv = document.getElementById('cutout-rendered-canvas');
+      const feedCanv = document.getElementById('feedback-canvas');
+      const fCtx = feedCanv.getContext('2d');
+
+      fCtx.clearRect(0,0,100,120);
+      
+      // Mirror center of active workspace render into checking card
+      fCtx.drawImage(renderCanv, 60, 80, 200, 240, 0, 0, 100, 120);
+
+      // Refresh text indicators
+      const colorBox = document.getElementById('feedback-color');
+      if (STATE.background === '#ffffff') {
+        colorBox.textContent = 'White (#FFFFFF)';
+        colorBox.style.backgroundColor = '#ffffff';
+        colorBox.style.color = '#0f172a';
+      } else {
+        colorBox.textContent = 'Blue (#1D4ED8)';
+        colorBox.style.backgroundColor = '#1d4ed8';
+        colorBox.style.color = '#ffffff';
+      }
+    }
+
+    // === TABS CONTROL ===
+    function switchActivePhoto(id) {
+      STATE.activeId = id;
+      
+      // Toggle CSS Tabs class names
+      document.getElementById('tab-photo-1').classList.toggle('active', id === 1);
+      document.getElementById('tab-photo-2').classList.toggle('active', id === 2);
+
+      loadActivePhoto();
+    }
+
+    // === SOLID BACKDROP REPLACEMENT ===
+    function changeBackground(colorHex) {
+      STATE.background = colorHex;
+
+      // Update Swatches styling buttons
+      document.getElementById('bg-btn-white').classList.toggle('active', colorHex === '#ffffff');
+      document.getElementById('bg-btn-blue').classList.toggle('active', colorHex === '#1d4ed8');
+
+      // Update primary rendering
+      updateCanvasRender();
+    }
+
+    // === SLIDER ADJUSTMENTS LINKING ===
+    function adjustBrightness(val) {
+      const activePhoto = STATE.photos[STATE.activeId];
+      activePhoto.brightness = parseInt(val);
+      document.getElementById('brightness-val').textContent = val + '%';
+      updateCanvasRender();
+    }
+
+    function adjustScale(val) {
+      const activePhoto = STATE.photos[STATE.activeId];
+      activePhoto.scale = parseFloat(val);
+      document.getElementById('scale-val').textContent = parseFloat(val).toFixed(2) + 'x';
+      updateCanvasRender();
+    }
+
+    function adjustPosX(val) {
+      const activePhoto = STATE.photos[STATE.activeId];
+      activePhoto.posX = parseInt(val);
+      document.getElementById('pos-x-val').textContent = val + 'px';
+      updateCanvasRender();
+    }
+
+    function adjustPosY(val) {
+      const activePhoto = STATE.photos[STATE.activeId];
+      activePhoto.posY = parseInt(val);
+      document.getElementById('pos-y-val').textContent = val + 'px';
+      updateCanvasRender();
+    }
+
+    function resetAdjustments() {
+      const activePhoto = STATE.photos[STATE.activeId];
+      activePhoto.brightness = 100;
+      activePhoto.scale = 1.0;
+      activePhoto.posX = 0;
+      activePhoto.posY = 0;
+      
+      loadActivePhoto();
+    }
+
+    // === INTERACTIVE POINTER PANNING & CROPPING ADJUSTMENT ===
+    function onPointerDown(e) {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      e.target.setPointerCapture(e.pointerId);
+    }
+
+    function onPointerMove(e) {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      const activePhoto = STATE.photos[STATE.activeId];
+      activePhoto.posX += dx;
+      activePhoto.posY += dy;
+
+      // Update offsets sliders feedback
+      document.getElementById('slide-pos-x').value = activePhoto.posX;
+      document.getElementById('pos-x-val').textContent = activePhoto.posX + 'px';
+
+      document.getElementById('slide-pos-y').value = activePhoto.posY;
+      document.getElementById('pos-y-val').textContent = activePhoto.posY + 'px';
+
+      // Save client reference delta
+      startX = e.clientX;
+      startY = e.clientY;
+
+      updateCanvasRender();
+    }
+
+    function onPointerUp(e) {
+      isDragging = false;
+      e.target.releasePointerCapture(e.pointerId);
+
+      // Refresh sheets grid print composite to guarantee synced images layout
+      updatePrintSheetGrid();
+    }
+
+    // === GENERATE A4 COMPOSITE PHOTO SHEET GRID ===
+    function changePrintCopies(num) {
+      STATE.numCopies = num;
+      document.getElementById('layout-density-std').classList.toggle('active', num === 20);
+      document.getElementById('layout-density-max').classList.toggle('active', num === 12);
+      updatePrintSheetGrid();
+    }
+
+    function updatePrintSheetGrid() {
+      const renderCanv = document.getElementById('cutout-rendered-canvas');
+      const printGrid = document.getElementById('print-sheet-grid');
+      
+      // Snapshot current canvas preview state
+      const snapUrl = renderCanv.toDataURL();
+      
+      let gridHtml = '';
+      
+      // Inject duplicate grid photos corresponding to standard copy expectations
+      for (let i = 0; i < STATE.numCopies; i++) {
+        gridHtml += `
+          <div class="a4-photo-slot">
+            <img src="${snapUrl}" alt="A4 duplicate passport copy" />
+          </div>
+        `;
+      }
+      
+      printGrid.innerHTML = gridHtml;
+
+      // Adjust grid layout dynamically depending on slots quantity selected
+      if (STATE.numCopies === 12) {
+        printGrid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+        printGrid.style.gridTemplateRows = 'repeat(4, 1fr)';
+      } else {
+        printGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+        printGrid.style.gridTemplateRows = 'repeat(5, 1fr)';
+      }
+    }
+
+    // === PRINT TRIGGERS ===
+    function initiateBrowserPrint() {
+      // Direct print trigger overlay mirroring current A4 duplicate block sheet preview
+      const printWin = window.open('', '_blank');
+      const renderedImgUrl = document.getElementById('cutout-rendered-canvas').toDataURL();
+      
+      let photosListMarkup = '';
+      for(let i=0; i < STATE.numCopies; i++) {
+        photosListMarkup += `<div style="border: 0.5px solid #ccc; width: 35mm; height: 45mm; overflow: hidden; display: inline-block; margin: 4px; box-sizing: border-box;"><img src="${renderedImgUrl}" style="width:100%; height:100%; object-fit:cover; display:block;"/></div>`;
+      }
+
+      printWin.document.write(`
+        <html>
+        <head>
+          <title>Passport Photo Print Job - Smart Photo Shop</title>
+          <style>
+            @page {
+              size: A4;
+              margin: 15mm;
+            }
+            body {
+              margin: 0;
+              padding: 0;
+              font-family: sans-serif;
+              text-align: center;
+              background-color: #fff;
+            }
+            .print-grid {
+              max-width: 170mm;
+              margin: 0 auto;
+              text-align: left;
+            }
+          </style>
+        </head>
+        <body onload="window.print(); window.close();">
+          <h2 style="font-size:14px; color:#555; font-family: monospace; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:15px; text-transform:uppercase; letter-spacing:0.1em;">Smart Photo Shop - Composite Biometric Passport Grid</h2>
+          <div class="print-grid">
+            ${photosListMarkup}
+          </div>
+        </body>
+        </html>
+      `);
+      printWin.document.close();
+    }
+  </script>
+
+</body>
+</html>
